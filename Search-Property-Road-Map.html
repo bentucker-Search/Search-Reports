@@ -7,62 +7,156 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #222; min-height: 100vh; }
-    header { background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%); color: #fff; padding: 36px 40px 28px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    header { background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%); color: #fff; padding: 36px 40px 28px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
     header h1 { font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 8px; }
     header p { font-size: 1.05rem; opacity: 0.85; }
-    .container { max-width: 960px; margin: 40px auto; padding: 0 20px 60px; }
-    .section-title { font-size: 1.3rem; font-weight: 700; color: #1a3a5c; margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 3px solid #2d6a9f; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .card { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 24px 22px 20px; transition: transform 0.18s, box-shadow 0.18s; display: flex; flex-direction: column; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.13); }
-    .card-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #2d6a9f; font-weight: 600; margin-bottom: 8px; }
-    .card h3 { font-size: 1.08rem; color: #1a3a5c; margin-bottom: 8px; }
-    .card p { font-size: 0.9rem; color: #555; flex-grow: 1; margin-bottom: 16px; line-height: 1.5; }
-    .card a.btn { display: inline-block; background: #2d6a9f; color: #fff; text-decoration: none; padding: 9px 18px; border-radius: 6px; font-size: 0.88rem; font-weight: 600; transition: background 0.15s; text-align: center; }
-    .card a.btn:hover { background: #1a3a5c; }
-    footer { text-align: center; padding: 24px; font-size: 0.85rem; color: #888; border-top: 1px solid #e0e0e0; margin-top: 40px; }
+    .container { max-width: 1100px; margin: 40px auto; padding: 0 24px 60px; }
+    .section-title { font-size: 1.25rem; font-weight: 700; color: #1a3a5c; margin: 40px 0 18px; padding-bottom: 10px; border-bottom: 3px solid #2d6a9f; display: flex; align-items: center; gap: 10px; }
+    .badge { display: inline-block; background: #2d6a9f; color: #fff; border-radius: 12px; font-size: 0.75rem; font-weight: 700; padding: 2px 10px; margin-left: 6px; vertical-align: middle; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 22px 22px 18px; display: flex; flex-direction: column; border-top: 4px solid #2d6a9f; transition: transform 0.18s, box-shadow 0.18s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+    .card.active { border-top-color: #27a96c; }
+    .card.pending { border-top-color: #e6a817; }
+    .card.complete { border-top-color: #2d6a9f; }
+    .status-pill { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; width: fit-content; }
+    .status-pill.active { background: #e6f9f1; color: #27a96c; }
+    .status-pill.pending { background: #fef8e7; color: #b87c0d; }
+    .status-pill.complete { background: #e8f0fb; color: #2d6a9f; }
+    .card h3 { font-size: 1.05rem; color: #1a3a5c; margin-bottom: 4px; font-weight: 700; }
+    .card .address { font-size: 0.82rem; color: #888; margin-bottom: 10px; }
+    .card p { font-size: 0.88rem; color: #555; flex-grow: 1; margin-bottom: 16px; line-height: 1.55; }
+    .card-footer { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { display: inline-block; text-decoration: none; padding: 8px 16px; border-radius: 7px; font-size: 0.84rem; font-weight: 600; transition: background 0.15s, color 0.15s; text-align: center; }
+    .btn-primary { background: #2d6a9f; color: #fff; }
+    .btn-primary:hover { background: #1a3a5c; }
+    .btn-outline { background: #fff; color: #2d6a9f; border: 1.5px solid #2d6a9f; }
+    .btn-outline:hover { background: #f0f6fc; }
+    .add-card { border: 2.5px dashed #b0c8e0; background: #f7fafd; border-radius: 12px; padding: 28px 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #2d6a9f; min-height: 180px; }
+    .add-card .plus { font-size: 2.2rem; margin-bottom: 8px; font-weight: 300; color: #b0c8e0; }
+    .add-card p { font-size: 0.88rem; color: #7da8cc; margin: 0; }
+    .instructions { background: #fff8e1; border-left: 4px solid #f0b429; border-radius: 8px; padding: 16px 20px; margin-bottom: 32px; font-size: 0.88rem; color: #7a5c00; line-height: 1.6; }
+    .instructions strong { color: #5a4000; }
+    footer { text-align: center; padding: 24px; font-size: 0.82rem; color: #aaa; border-top: 1px solid #e4e8ee; margin-top: 40px; }
   </style>
 </head>
 <body>
+
 <header>
   <h1>Search Property Road Map</h1>
-  <p>Client-facing hub for property research, reports and project links</p>
+  <p>Client hub &mdash; property search reports &amp; road map links</p>
 </header>
+
 <div class="container">
-  <div class="section-title">Property Reports</div>
-  <div class="card-grid">
-    <div class="card">
-      <div class="card-label">Report</div>
-      <h3>Chahla Property Search</h3>
-      <p>Full property search report for the Chahla project, including title chain, encumbrances and findings.</p>
-      <a class="btn" href="https://bentucker-search.github.io/Search-Reports/Chahla.html" target="_blank">View Report</a>
-    </div>
+
+  <div class="instructions">
+    <strong>How to add a new client:</strong> Edit this file and copy any card block below. Update the client name, property address, description, and replace the <code>href="#"</code> with the real report or road map link. Change the status pill class to <code>active</code>, <code>pending</code>, or <code>complete</code>.
   </div>
-  <div class="section-title">Road Map Projects</div>
+
+  <!-- ========== ACTIVE CLIENTS ========== -->
+  <div class="section-title">Active Clients <span class="badge">3</span></div>
   <div class="card-grid">
-    <div class="card">
-      <div class="card-label">Road Map</div>
-      <h3>Project Name</h3>
-      <p>Brief description of the road map project or property search workflow for this client.</p>
-      <a class="btn" href="#" target="_blank">Open Road Map</a>
+
+    <div class="card active">
+      <span class="status-pill active">Active</span>
+      <h3>Chahla</h3>
+      <div class="address">123 Main St, City, State</div>
+      <p>Full property search report including title chain, liens, encumbrances and recorded documents.</p>
+      <div class="card-footer">
+        <a class="btn btn-primary" href="https://bentucker-search.github.io/Search-Reports/Chahla.html" target="_blank">View Report</a>
+        <a class="btn btn-outline" href="#" target="_blank">Road Map</a>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-label">Road Map</div>
-      <h3>Project Name</h3>
-      <p>Brief description of the road map project or property search workflow for this client.</p>
-      <a class="btn" href="#" target="_blank">Open Road Map</a>
+
+    <div class="card active">
+      <span class="status-pill active">Active</span>
+      <h3>Client Name</h3>
+      <div class="address">Property Address</div>
+      <p>Description of the search or road map project for this client. Update with actual details.</p>
+      <div class="card-footer">
+        <a class="btn btn-primary" href="#" target="_blank">View Report</a>
+        <a class="btn btn-outline" href="#" target="_blank">Road Map</a>
+      </div>
     </div>
+
+    <div class="card active">
+      <span class="status-pill active">Active</span>
+      <h3>Client Name</h3>
+      <div class="address">Property Address</div>
+      <p>Description of the search or road map project for this client. Update with actual details.</p>
+      <div class="card-footer">
+        <a class="btn btn-primary" href="#" target="_blank">View Report</a>
+        <a class="btn btn-outline" href="#" target="_blank">Road Map</a>
+      </div>
+    </div>
+
+    <!-- ADD MORE ACTIVE CLIENT CARDS HERE -->
+    <div class="add-card">
+      <div class="plus">+</div>
+      <p>Add a new active client card here</p>
+    </div>
+
   </div>
-  <div class="section-title">Client Links</div>
+
+  <!-- ========== PENDING CLIENTS ========== -->
+  <div class="section-title">Pending Clients <span class="badge">2</span></div>
   <div class="card-grid">
-    <div class="card">
-      <div class="card-label">Client</div>
-      <h3>Client / Project Name</h3>
-      <p>Shareable link for this client's property road map or search results package.</p>
-      <a class="btn" href="#" target="_blank">Send to Client</a>
+
+    <div class="card pending">
+      <span class="status-pill pending">Pending</span>
+      <h3>Client Name</h3>
+      <div class="address">Property Address</div>
+      <p>Search in progress. Report link will be added once complete.</p>
+      <div class="card-footer">
+        <a class="btn btn-outline" href="#" target="_blank">Road Map</a>
+      </div>
     </div>
+
+    <div class="card pending">
+      <span class="status-pill pending">Pending</span>
+      <h3>Client Name</h3>
+      <div class="address">Property Address</div>
+      <p>Search in progress. Report link will be added once complete.</p>
+      <div class="card-footer">
+        <a class="btn btn-outline" href="#" target="_blank">Road Map</a>
+      </div>
+    </div>
+
+    <!-- ADD MORE PENDING CLIENT CARDS HERE -->
+    <div class="add-card">
+      <div class="plus">+</div>
+      <p>Add a new pending client card here</p>
+    </div>
+
   </div>
+
+  <!-- ========== COMPLETED CLIENTS ========== -->
+  <div class="section-title">Completed <span class="badge">1</span></div>
+  <div class="card-grid">
+
+    <div class="card complete">
+      <span class="status-pill complete">Complete</span>
+      <h3>Client Name</h3>
+      <div class="address">Property Address</div>
+      <p>Search complete. Final report delivered to client.</p>
+      <div class="card-footer">
+        <a class="btn btn-primary" href="#" target="_blank">View Report</a>
+      </div>
+    </div>
+
+    <!-- ADD MORE COMPLETED CLIENT CARDS HERE -->
+    <div class="add-card">
+      <div class="plus">+</div>
+      <p>Add a completed client card here</p>
+    </div>
+
+  </div>
+
 </div>
-<footer>&copy; 2026 Search Property Road Map - For internal and client use only.</footer>
+
+<footer>
+  &copy; 2026 Search Property Road Map &mdash; For internal and client use only.
+</footer>
+
 </body>
 </html>
