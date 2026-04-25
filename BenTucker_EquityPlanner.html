@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Mortgages | Property Equity Planner — Ben Tucker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #eb7f28;
+    --orange-dim: rgba(235,127,40,0.15);
+    --orange-border: rgba(235,127,40,0.3);
+    --white: #ffffff;
+    --off-white: rgba(255,255,255,0.82);
+    --muted: rgba(255,255,255,0.38);
+    --black: #000000;
+    --card-bg: #0f0f0f;
+    --card-border: rgba(255,255,255,0.07);
+    --green: #4ade80;
+    --red: #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: #000;
+    border-bottom: 1px solid rgba(235,127,40,0.2);
+    padding: 0 48px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--orange);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark span {
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  .logo-type {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .logo-type strong {
+    color: var(--orange);
+    font-weight: 600;
+  }
+
+  .header-right {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: #000;
+    padding: 80px 48px 64px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(235,127,40,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 40px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 4.5vw, 4rem);
+    line-height: 1.08;
+    color: var(--white);
+    margin-bottom: 18px;
+  }
+
+  .hero h1 em {
+    color: var(--orange);
+    font-style: italic;
+  }
+
+  .hero-sub {
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.8;
+  }
+
+  .hero-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .hero-meta .date {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .hero-meta .growth-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+    border-radius: 4px;
+    padding: 10px 18px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    font-weight: 500;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 56px 0 28px;
+  }
+
+  .section-head .label {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--orange);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .section-head .line {
+    flex: 1;
+    height: 1px;
+    background: var(--card-border);
+  }
+
+  /* ===== STAT STRIP ===== */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    border: 1px solid var(--card-border);
+    border-radius: 2px;
+  }
+
+  .stat-item {
+    padding: 28px 24px;
+    border-right: 1px solid var(--card-border);
+    position: relative;
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-item.accent {
+    background: var(--orange-dim);
+    border-color: var(--orange-border);
+  }
+
+  .stat-item .s-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .stat-item .s-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-item.accent .s-val { color: var(--orange); }
+
+  .stat-item .s-sub {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== PROPERTY CARDS GRID ===== */
+  .props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--card-border);
+    background: var(--card-border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .prop-card {
+    background: var(--card-bg);
+    padding: 28px;
+    position: relative;
+  }
+
+  .prop-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--orange);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .prop-card:hover::before { opacity: 1; }
+  .prop-card.selling::before { background: var(--red); opacity: 0.5; }
+
+  .prop-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .prop-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .prop-lender {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  .badge {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .badge.ppr { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge.inv { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.1); }
+  .badge.sell { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+
+  .prop-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--card-border);
+    border: 1px solid var(--card-border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .metric {
+    background: #000;
+    padding: 12px 14px;
+  }
+
+  .metric .m-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .metric .m-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--white);
+  }
+
+  .metric.green .m-val { color: var(--green); }
+  .metric.orange .m-val { color: var(--orange); }
+  .metric.red .m-val { color: var(--red); }
+
+  .prop-rate-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .prop-rate-row .rate-val {
+    color: var(--orange);
+    font-weight: 500;
+    font-size: 0.72rem;
+  }
+
+  .dot-sep {
+    width: 3px; height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+  }
+
+  /* ===== CHART PANELS ===== */
+  .chart-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 2px;
+    padding: 36px;
+    margin-bottom: 2px;
+  }
+
+  .chart-panel + .chart-panel { margin-top: 1px; }
+
+  .chart-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .chart-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  .chart-panel .chart-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-line {
+    width: 20px; height: 2px;
+    flex-shrink: 0;
+  }
+
+  canvas { width: 100% !important; }
+
+  /* ===== CASHFLOW TABLE ===== */
+  .cf-table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    border-bottom: 1px solid rgba(235,127,40,0.25);
+  }
+
+  th {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  td {
+    padding: 16px 16px;
+    font-size: 0.8rem;
+    color: var(--off-white);
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .td-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--white);
+  }
+
+  .td-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+  }
+
+  .green { color: var(--green); }
+  .red { color: var(--red); }
+  .orange { color: var(--orange); }
+
+  .total-row td {
+    border-top: 1px solid rgba(235,127,40,0.2);
+    border-bottom: none;
+    padding-top: 18px;
+  }
+
+  /* ===== SELLING SECTION ===== */
+  .selling-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--card-border);
+    border: 1px solid var(--card-border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .selling-card {
+    background: var(--card-bg);
+    padding: 28px;
+  }
+
+  .selling-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .selling-card .sc-sub {
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+
+  .sc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 0.75rem;
+  }
+
+  .sc-row:last-child { border-bottom: none; }
+  .sc-row .sc-l { color: var(--muted); letter-spacing: 0.06em; }
+  .sc-row .sc-r { font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+
+  /* ===== NOTE BOXES ===== */
+  .note {
+    border-left: 2px solid var(--orange);
+    padding: 14px 18px;
+    background: var(--orange-dim);
+    border-radius: 0 2px 2px 0;
+    font-size: 0.74rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
+  .note.red-note {
+    border-left-color: var(--red);
+    background: rgba(248,113,113,0.06);
+  }
+
+  /* ===== CTA ===== */
+  .cta-block {
+    border: 1px solid var(--orange-border);
+    background: var(--orange-dim);
+    border-radius: 2px;
+    padding: 56px 48px;
+    text-align: center;
+    margin-top: 56px;
+  }
+
+  .cta-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .cta-block p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.8;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .cta-btn:hover { background: #d47223; transform: translateY(-2px); }
+
+  /* ===== DISCLAIMER ===== */
+  .disclaimer {
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.2);
+    line-height: 1.8;
+    padding: 32px 0 16px;
+    border-top: 1px solid var(--card-border);
+    margin-top: 48px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    header { padding: 0 20px; }
+    .hero { padding: 52px 20px 44px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-meta { text-align: left; }
+    .container { padding: 0 20px 60px; }
+    .chart-panel { padding: 22px; }
+    .cta-block { padding: 36px 24px; }
+    .stat-strip { grid-template-columns: 1fr 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--card-border); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark"><span>S<br>M</span></div>
+    <div class="logo-type"><strong>SEARCH</strong>&nbsp;&nbsp;MORTGAGES</div>
+  </div>
+  <div class="header-right">Property Equity Planner</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Prepared for Ben Tucker &nbsp;·&nbsp; April 2025</div>
+      <h1>Your Portfolio<br><em>Equity Roadmap</em></h1>
+      <p class="hero-sub">A 5-year projection of your property portfolio's growth trajectory — showing the widening gap between debt and value, available equity at 80% LVR, and your capacity to acquire your next asset.</p>
+    </div>
+    <div class="hero-meta">
+      <div class="date">Based on</div>
+      <div class="growth-pill">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 10L5 5L8 8L11 2" stroke="#eb7f28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        6% p.a. Growth Rate
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- PORTFOLIO STATS -->
+  <div class="section-head"><span class="label">Portfolio Overview</span><div class="line"></div></div>
+  <div class="stat-strip" id="stat-strip"></div>
+
+  <!-- PROPERTY CARDS -->
+  <div class="section-head"><span class="label">Property Breakdown</span><div class="line"></div></div>
+  <div class="props-grid" id="props-grid"></div>
+
+  <!-- EQUITY GAP LINE CHART -->
+  <div class="section-head"><span class="label">5-Year Equity Gap</span><div class="line"></div></div>
+  <div class="chart-panel">
+    <div class="chart-panel-head">
+      <div>
+        <h2>Value vs Debt Over 5 Years</h2>
+      </div>
+    </div>
+    <p class="chart-sub">Your portfolio value compounds at 6% p.a. while debt reduces (P&I) or holds flat (IO) — the gap is your growing net equity.</p>
+    <canvas id="lineChart" height="320"></canvas>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line" style="background:#eb7f28;"></div> Portfolio Value</div>
+      <div class="legend-item"><div class="legend-line" style="background:rgba(255,255,255,0.35); border-top: 2px dashed rgba(255,255,255,0.35); height:0;width:20px;"></div> Total Debt</div>
+      <div class="legend-item"><div class="legend-line" style="background:#4ade80;"></div> Net Equity</div>
+      <div class="legend-item"><div class="legend-line" style="background:#fb923c; opacity:0.5;"></div> Usable Equity (80% LVR)</div>
+    </div>
+  </div>
+
+  <!-- BUBBLE CHART — YEAR BY YEAR PER PROPERTY -->
+  <div class="section-head"><span class="label">Equity Growth — Per Property by Year</span><div class="line"></div></div>
+  <div class="chart-panel">
+    <div class="chart-panel-head">
+      <h2>Equity Bubble Chart</h2>
+    </div>
+    <p class="chart-sub">Each bubble represents one property at a specific year (Now → Year 5). X axis = projected property value. Y axis = available equity at 80% LVR. Bubble size = remaining debt. Watch each property's trajectory as it moves right and up over time.</p>
+    <canvas id="bubbleChart" height="400"></canvas>
+    <div class="chart-legend" id="bubble-legend"></div>
+    <div class="note" style="margin-top:20px;">💡 Larger bubbles indicate higher remaining debt. As properties are paid down and values grow, bubbles move right (higher value) and up (more usable equity) while shrinking in size.</div>
+  </div>
+
+  <!-- BAR CHART — YEAR 5 EQUITY PER PROPERTY -->
+  <div class="section-head"><span class="label">Year 5 Usable Equity Per Property</span><div class="line"></div></div>
+  <div class="chart-panel">
+    <h2>Available Equity at 80% LVR — Year 5</h2>
+    <p class="chart-sub" style="margin-bottom:28px;">How much equity each active property unlocks for you to use as a deposit on your next acquisition.</p>
+    <canvas id="barChart" height="260"></canvas>
+  </div>
+
+  <!-- CASHFLOW TABLE -->
+  <div class="section-head"><span class="label">Investment Cash Flow</span><div class="line"></div></div>
+  <div class="chart-panel">
+    <h2>Rental Income vs Interest Cost</h2>
+    <p class="chart-sub">Annual rent against interest-only holding cost. P&I repayments will be higher — principal component builds equity.</p>
+    <div class="cf-table-wrap">
+      <table id="cf-table"></table>
+    </div>
+    <div class="note">Note: Cash flow figures use interest cost only. P&I loans carry higher monthly repayments — the principal portion is wealth building, not a true cost. Speak to your broker about IO vs P&I structuring for each property.</div>
+  </div>
+
+  <!-- SELLING SECTION -->
+  <div class="section-head" id="sell-head" style="display:none;"><span class="label">Upcoming Sales</span><div class="line"></div></div>
+  <div id="sell-section" style="display:none;"></div>
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <h2>Ready to grow your portfolio?</h2>
+    <p>Your equity is compounding — the question is whether your loan structure is working as hard as your properties.<br>Let's map out your next acquisition strategy together.</p>
+    <a class="cta-btn" href="mailto:ben@searchmortgages.com.au">Book a Strategy Session</a>
+  </div>
+
+  <p class="disclaimer">This report has been prepared by Search Mortgages for illustrative purposes only and does not constitute financial advice, a credit assessment, or a recommendation to buy or sell property. Property value projections are based on a 6% per annum growth assumption derived from historical Australian averages and are not guaranteed. Actual results may vary materially. Rental yields, interest rates, LVR thresholds, and market conditions are subject to change. Net cash flow estimates use interest costs only and do not account for all holding costs including rates, insurance, maintenance, property management fees, land tax, or depreciation. Selling proceeds are gross estimates before agent commissions, legal fees, CGT and other transaction costs. Always obtain independent financial, tax, and legal advice before making investment decisions. Australian Credit Licence.</p>
+
+</div>
+
+<script>
+// ========== DATA ==========
+const CLIENT = 'Ben Tucker';
+const GROWTH = 0.06;
+const YEARS = [0,1,2,3,4,5];
+
+const properties = [
+  { name:'Millswood', suburb:'Millswood', type:'PPR', lender:'Macquarie', value:3000000, debt:1330000, rate:0.0594, loanType:'PI', rent:0, jvShare:1 },
+  { name:'Hilton',    suburb:'Hilton',    type:'INV', lender:'CBA',       value:1250000, debt:962000,  rate:0.0594, loanType:'PI', rent:770,  jvShare:1 },
+  { name:'Brighton',  suburb:'Brighton',  type:'INV', lender:'Resimac',   value:1550000, debt:1304000, rate:0.0645, loanType:'IO', rent:650,  jvShare:1 },
+  { name:'Unley',     suburb:'Unley',     type:'INV', lender:'ANZ',       value:2500000, debt:1225000, rate:0.07,   loanType:'IO', rent:0,    jvShare:1 },
+  { name:'Clapham',   suburb:'Clapham',   type:'SELL',lender:'',          value:1800000, debt:900000,  rate:0,      loanType:'IO', rent:0,    jvShare:0.5, sellIn:'~2 months' },
+  { name:'Westbourne Park', suburb:'Westbourne Park', type:'SELL', lender:'', value:2000000, debt:1378000, rate:0, loanType:'IO', rent:0, jvShare:1, sellIn:'~7 months' },
+];
+
+const COLORS = ['#eb7f28','#f7c97e','#4ade80','#7eb8f7','#d07ef7','#f87171','#34d399','#fbbf24'];
+
+// ========== HELPERS ==========
+function fmtM(n) {
+  const abs = Math.abs(n);
+  if (abs >= 1000000) return (n<0?'-':'') + '$' + (abs/1000000).toFixed(2) + 'M';
+  if (abs >= 1000) return (n<0?'-':'') + '$' + (abs/1000).toFixed(0) + 'k';
+  return (n<0?'-':'') + '$' + abs.toFixed(0);
+}
+
+function fmtFull(n) {
+  const neg = n < 0;
+  return (neg?'-':'') + '$' + Math.abs(Math.round(n)).toLocaleString('en-AU');
+}
+
+function projectedValue(p, yr) {
+  return p.value * Math.pow(1 + GROWTH, yr);
+}
+
+function projectedDebt(p, yr) {
+  if (p.loanType === 'IO' || p.rate === 0) return p.debt;
+  const r = p.rate / 12;
+  const n = 25 * 12;
+  const pmt = (p.debt * r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1);
+  let bal = p.debt;
+  for (let m = 0; m < yr*12; m++) {
+    const interest = bal * r;
+    bal = Math.max(0, bal - (pmt - interest));
+  }
+  return bal;
+}
+
+function usableEquity(p, yr) {
+  const v = projectedValue(p, yr);
+  const d = projectedDebt(p, yr);
+  return Math.max(0, v * 0.8 - d);
+}
+
+// Active (non-selling) properties
+const active = properties.filter(p => p.type !== 'SELL');
+const selling = properties.filter(p => p.type === 'SELL');
+
+// ========== STAT STRIP ==========
+const totalValue = active.reduce((s,p) => s+p.value, 0);
+const totalDebt  = active.reduce((s,p) => s+p.debt, 0);
+const totalEquity = totalValue - totalDebt;
+const usableNow  = active.reduce((s,p) => s+usableEquity(p,0), 0);
+const yr5Val     = active.reduce((s,p) => s+projectedValue(p,5), 0);
+const yr5Usable  = active.reduce((s,p) => s+usableEquity(p,5), 0);
+const sellingProceeds = selling.reduce((s,p) => s + (p.value-p.debt)*p.jvShare, 0);
+
+const strip = document.getElementById('stat-strip');
+const stats = [
+  { label:'Total Portfolio Value', val: fmtM(totalValue), sub:'Active properties' },
+  { label:'Total Debt', val: fmtM(totalDebt), sub:'Across active loans' },
+  { label:'Current Net Equity', val: fmtM(totalEquity), sub:'Value minus debt', accent:true },
+  { label:'Usable Equity Now', val: fmtM(usableNow), sub:'Available at 80% LVR', accent:true },
+  { label:'Year 5 Portfolio Value', val: fmtM(yr5Val), sub:'At 6% p.a.' },
+  { label:'Year 5 Usable Equity', val: fmtM(yr5Usable), sub:'At 80% LVR', accent:true },
+  ...(sellingProceeds > 0 ? [{ label:'Est. Sale Proceeds', val: fmtM(sellingProceeds), sub:'Your share (gross)' }] : [])
+];
+
+stats.forEach(s => {
+  strip.innerHTML += `<div class="stat-item${s.accent?' accent':''}">
+    <span class="s-label">${s.label}</span>
+    <div class="s-val">${s.val}</div>
+    <div class="s-sub">${s.sub}</div>
+  </div>`;
+});
+
+// ========== PROPERTY CARDS ==========
+const grid = document.getElementById('props-grid');
+properties.forEach((p, i) => {
+  const equity = p.value - p.debt;
+  const lvr = ((p.debt/p.value)*100).toFixed(1);
+  const usable = usableEquity(p, 0);
+  const yr5v = projectedValue(p, 5);
+  const yr5u = usableEquity(p, 5);
+  const badge = p.type === 'PPR' ? '<span class="badge ppr">PPR</span>' : p.type === 'SELL' ? '<span class="badge sell">Selling</span>' : '<span class="badge inv">INV</span>';
+
+  let extraMetrics = '';
+  if (p.type === 'INV' && p.rent > 0) {
+    const annualRent = p.rent * 52;
+    const annualInterest = p.debt * p.rate;
+    const cf = annualRent - annualInterest;
+    extraMetrics = `
+      <div class="metric"><div class="m-label">Weekly Rent</div><div class="m-val orange">${fmtFull(p.rent)}/wk</div></div>
+      <div class="metric ${cf>=0?'green':'red'}"><div class="m-label">Net Cash Flow</div><div class="m-val">${cf>=0?'+':''}${fmtM(cf)}/yr</div></div>
+    `;
+  } else if (p.type === 'SELL') {
+    const gross = p.value - p.debt;
+    const yours = gross * p.jvShare;
+    extraMetrics = `
+      <div class="metric"><div class="m-label">Gross Profit</div><div class="m-val green">${fmtFull(gross)}</div></div>
+      <div class="metric orange"><div class="m-label">Your Share (${(p.jvShare*100).toFixed(0)}%)</div><div class="m-val">${fmtFull(yours)}</div></div>
+    `;
+  } else {
+    extraMetrics = `
+      <div class="metric orange"><div class="m-label">Usable Equity Now</div><div class="m-val">${usable>0?fmtFull(usable):'—'}</div></div>
+      <div class="metric"><div class="m-label">Yr 5 Usable Equity</div><div class="m-val">${fmtFull(yr5u)}</div></div>
+    `;
+  }
+
+  grid.innerHTML += `
+    <div class="prop-card${p.type==='SELL'?' selling':''}">
+      <div class="prop-card-top">
+        <div>
+          <div class="prop-name">${p.name}</div>
+          <div class="prop-lender">${p.lender || (p.type==='SELL'?'Selling '+p.sellIn:'')}</div>
+        </div>
+        ${badge}
+      </div>
+      <div class="prop-metrics">
+        <div class="metric"><div class="m-label">Current Value</div><div class="m-val">${fmtFull(p.value)}</div></div>
+        <div class="metric"><div class="m-label">Debt</div><div class="m-val">${fmtFull(p.debt)}</div></div>
+        <div class="metric ${equity>=0?'green':'red'}"><div class="m-label">Net Equity</div><div class="m-val">${fmtFull(equity)}</div></div>
+        <div class="metric"><div class="m-label">LVR</div><div class="m-val">${lvr}%</div></div>
+        ${extraMetrics}
+        ${p.type!=='SELL'?`<div class="metric"><div class="m-label">Yr 5 Value</div><div class="m-val">${fmtFull(yr5v)}</div></div>`:''}
+      </div>
+      ${p.rate>0?`<div class="prop-rate-row"><span class="rate-val">${(p.rate*100).toFixed(2)}%</span><span class="dot-sep"></span><span>${p.loanType==='PI'?'Principal & Interest':'Interest Only'}</span><span class="dot-sep"></span><span>${p.lender}</span></div>`:''}
+    </div>
+  `;
+});
+
+// ========== LINE CHART ==========
+const lineValByYear = YEARS.map(y => active.reduce((s,p) => s + projectedValue(p,y), 0));
+const lineDebtByYear = YEARS.map(y => active.reduce((s,p) => s + projectedDebt(p,y), 0));
+const lineEquityByYear = YEARS.map((y,i) => lineValByYear[i] - lineDebtByYear[i]);
+const lineUsableByYear = YEARS.map(y => active.reduce((s,p) => s + usableEquity(p,y), 0));
+
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: YEARS.map(y => y===0?'Now':'Year '+y),
+    datasets: [
+      {
+        label: 'Portfolio Value',
+        data: lineValByYear,
+        borderColor: '#eb7f28',
+        backgroundColor: 'rgba(235,127,40,0.06)',
+        fill: true, tension: 0.4, borderWidth: 2.5,
+        pointBackgroundColor: '#eb7f28', pointRadius: 5, pointHoverRadius: 7
+      },
+      {
+        label: 'Total Debt',
+        data: lineDebtByYear,
+        borderColor: 'rgba(255,255,255,0.3)',
+        backgroundColor: 'rgba(255,255,255,0.02)',
+        fill: true, tension: 0.4, borderWidth: 2,
+        borderDash: [6,4],
+        pointBackgroundColor: 'rgba(255,255,255,0.4)', pointRadius: 4
+      },
+      {
+        label: 'Net Equity',
+        data: lineEquityByYear,
+        borderColor: '#4ade80',
+        backgroundColor: 'rgba(74,222,128,0.04)',
+        fill: true, tension: 0.4, borderWidth: 2,
+        pointBackgroundColor: '#4ade80', pointRadius: 4
+      },
+      {
+        label: 'Usable Equity (80% LVR)',
+        data: lineUsableByYear,
+        borderColor: '#fb923c',
+        backgroundColor: 'rgba(251,146,60,0.04)',
+        fill: false, tension: 0.4, borderWidth: 1.5,
+        borderDash: [3,3],
+        pointBackgroundColor: '#fb923c', pointRadius: 3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0f0f0f',
+        borderColor: 'rgba(235,127,40,0.3)',
+        borderWidth: 1,
+        titleColor: 'rgba(255,255,255,0.6)',
+        bodyColor: '#fff',
+        padding: 14,
+        callbacks: { label: ctx => `  ${ctx.dataset.label}: ${fmtFull(ctx.parsed.y)}` }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: 'rgba(255,255,255,0.35)', font: { family: 'Montserrat', size: 11 } },
+        grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' }
+      },
+      y: {
+        ticks: { color: 'rgba(255,255,255,0.35)', font: { family: 'Montserrat', size: 11 }, callback: v => fmtM(v) },
+        grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' }
+      }
+    }
+  }
+});
+
+// ========== BUBBLE CHART — year-by-year per property ==========
+const bubbleDatasets = active.map((p, pi) => {
+  const color = COLORS[pi % COLORS.length];
+  const data = YEARS.map(yr => {
+    const v = projectedValue(p, yr);
+    const u = usableEquity(p, yr);
+    const d = projectedDebt(p, yr);
+    // bubble radius proportional to debt, scaled for visibility
+    const r = Math.max(7, Math.min(38, Math.sqrt(d / 80000)));
+    return { x: v, y: u, r, yr, debt: d };
+  });
+  return {
+    label: p.name,
+    data,
+    backgroundColor: color + '40',
+    borderColor: color,
+    borderWidth: 1.5,
+    hoverBackgroundColor: color + '70',
+  };
+});
+
+// Add year labels as a dummy invisible dataset for reference
+const bubbleCtx = document.getElementById('bubbleChart').getContext('2d');
+new Chart(bubbleCtx, {
+  type: 'bubble',
+  data: { datasets: bubbleDatasets },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0f0f0f',
+        borderColor: 'rgba(235,127,40,0.3)',
+        borderWidth: 1,
+        titleColor: 'rgba(255,255,255,0.5)',
+        bodyColor: '#fff',
+        padding: 14,
+        callbacks: {
+          title: ctx => `${ctx[0].dataset.label} — Year ${ctx[0].dataIndex}`,
+          label: ctx => [
+            `  Value: ${fmtFull(ctx.parsed.x)}`,
+            `  80% Usable Equity: ${fmtFull(ctx.parsed.y)}`,
+            `  Remaining Debt: ${fmtFull(ctx.raw.debt)}`
+          ]
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Projected Property Value', color: 'rgba(255,255,255,0.25)', font: { family: 'Montserrat', size: 10, weight: '500' } },
+        ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Montserrat', size: 11 }, callback: v => fmtM(v) },
+        grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' }
+      },
+      y: {
+        title: { display: true, text: 'Available Equity @ 80% LVR', color: 'rgba(255,255,255,0.25)', font: { family: 'Montserrat', size: 10, weight: '500' } },
+        ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Montserrat', size: 11 }, callback: v => fmtM(v) },
+        grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' }
+      }
+    }
+  }
+});
+
+// Bubble legend
+const bl = document.getElementById('bubble-legend');
+active.forEach((p, i) => {
+  const color = COLORS[i % COLORS.length];
+  const yr5u = usableEquity(p, 5);
+  bl.innerHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${p.name} — ${fmtM(yr5u)} usable equity by Year 5</div>`;
+});
+
+// ========== BAR CHART ==========
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: active.map(p => p.name),
+    datasets: [
+      {
+        label: 'Usable Equity Now',
+        data: active.map(p => usableEquity(p, 0)),
+        backgroundColor: 'rgba(235,127,40,0.25)',
+        borderColor: '#eb7f28',
+        borderWidth: 1.5,
+        borderRadius: 2,
+      },
+      {
+        label: 'Usable Equity Year 5',
+        data: active.map(p => usableEquity(p, 5)),
+        backgroundColor: 'rgba(74,222,128,0.2)',
+        borderColor: '#4ade80',
+        borderWidth: 1.5,
+        borderRadius: 2,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: 'rgba(255,255,255,0.45)',
+          font: { family: 'Montserrat', size: 11 },
+          padding: 20, boxWidth: 12, boxHeight: 12
+        }
+      },
+      tooltip: {
+        backgroundColor: '#0f0f0f',
+        borderColor: 'rgba(235,127,40,0.3)',
+        borderWidth: 1,
+        padding: 14,
+        bodyColor: '#fff',
+        callbacks: { label: ctx => `  ${ctx.dataset.label}: ${fmtFull(ctx.parsed.y)}` }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'Montserrat', size: 11 } },
+        grid: { display: false }, border: { color: 'rgba(255,255,255,0.08)' }
+      },
+      y: {
+        ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Montserrat', size: 11 }, callback: v => fmtM(v) },
+        grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'rgba(255,255,255,0.08)' }
+      }
+    }
+  }
+});
+
+// ========== CASHFLOW TABLE ==========
+const invProps = properties.filter(p => p.type === 'INV' && p.rent > 0);
+const cfTable = document.getElementById('cf-table');
+if (invProps.length > 0) {
+  let totalRent = 0, totalInterest = 0, totalCF = 0;
+  let rows = invProps.map(p => {
+    const annualRent = p.rent * 52;
+    const annualInterest = p.debt * p.rate;
+    const cf = annualRent - annualInterest;
+    const weeklyCF = cf / 52;
+    totalRent += annualRent;
+    totalInterest += annualInterest;
+    totalCF += cf;
+    return `<tr>
+      <td class="td-name">${p.name}</td>
+      <td>${(p.rate*100).toFixed(2)}%</td>
+      <td>${p.loanType === 'PI' ? 'P&amp;I' : 'IO'}</td>
+      <td class="td-num red">(${fmtFull(annualInterest)})</td>
+      <td class="td-num green">+${fmtFull(annualRent)}</td>
+      <td class="td-num ${cf>=0?'green':'red'}">${cf>=0?'+':''}${fmtFull(cf)}</td>
+      <td class="td-num ${weeklyCF>=0?'green':'red'}">${weeklyCF>=0?'+':''}${fmtFull(weeklyCF)}/wk</td>
+    </tr>`;
+  }).join('');
+
+  cfTable.innerHTML = `
+    <thead><tr>
+      <th>Property</th><th>Rate</th><th>Type</th>
+      <th>Annual Interest</th><th>Annual Rent</th><th>Net Cash Flow</th><th>Weekly</th>
+    </tr></thead>
+    <tbody>
+      ${rows}
+      <tr class="total-row">
+        <td colspan="3"><strong style="font-size:0.8rem;letter-spacing:0.08em;">PORTFOLIO TOTAL</strong></td>
+        <td class="td-num red"><strong>(${fmtFull(totalInterest)})</strong></td>
+        <td class="td-num green"><strong>+${fmtFull(totalRent)}</strong></td>
+        <td class="td-num ${totalCF>=0?'green':'red'}"><strong>${totalCF>=0?'+':''}${fmtFull(totalCF)}</strong></td>
+        <td class="td-num ${totalCF/52>=0?'green':'red'}"><strong>${totalCF/52>=0?'+':''}${fmtFull(totalCF/52)}/wk</strong></td>
+      </tr>
+    </tbody>
+  `;
+}
+
+// ========== SELLING SECTION ==========
+if (selling.length > 0) {
+  document.getElementById('sell-head').style.display = 'flex';
+  document.getElementById('sell-section').style.display = 'block';
+
+  const cards = selling.map(p => {
+    const gross = p.value - p.debt;
+    const yours = gross * p.jvShare;
+    return `
+      <div class="selling-card">
+        <h3>${p.name}</h3>
+        <div class="sc-sub">Selling ${p.sellIn}</div>
+        <div class="sc-row"><span class="sc-l">Estimated Value</span><span class="sc-r">${fmtFull(p.value)}</span></div>
+        <div class="sc-row"><span class="sc-l">Remaining Debt</span><span class="sc-r red">${fmtFull(p.debt)}</span></div>
+        <div class="sc-row"><span class="sc-l">Gross Profit</span><span class="sc-r green">${fmtFull(gross)}</span></div>
+        <div class="sc-row"><span class="sc-l">Your Share</span><span class="sc-r">${(p.jvShare*100).toFixed(0)}%</span></div>
+        <div class="sc-row"><span class="sc-l" style="color:var(--orange);">Est. Proceeds to You</span><span class="sc-r orange" style="font-size:1.15rem;">${fmtFull(yours)}</span></div>
+      </div>
+    `;
+  }).join('');
+
+  const totalProceeds = selling.reduce((s,p) => s+(p.value-p.debt)*p.jvShare, 0);
+  document.getElementById('sell-section').innerHTML = `
+    <div class="selling-cards">${cards}</div>
+    <div class="note red-note" style="margin-top:16px;">⚠️ Sale proceeds are gross estimates before agent commissions, legal fees, CGT, and other transaction costs. Your accountant can model the post-tax position. Total estimated proceeds to you: <strong style="color:var(--green)">${fmtFull(totalProceeds)}</strong></div>
+  `;
+}
+</script>
+</body>
+</html>
